@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Excel Extractor</title>
+    <style>
+        #drop-zone {
+            border: 2px dashed #ccc;
+            padding: 50px;
+            text-align: center;
+            margin: 50px;
+        }
+
+        .loading {
+            display: none;
+            color: blue;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="drop-zone">Drag and Drop Excel File Here</div>
+    <p class="loading" id="status">Processing... please wait.</p>
+
+    <script>
+        const zone = document.getElementById('drop-zone');
+        zone.ondragover = e => e.preventDefault();
+        zone.ondrop = async e => {
+            e.preventDefault();
+            const file = e.dataTransfer.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+
+            document.getElementById('status').style.display = 'block';
+
+            const response = await fetch('/upload', { method: 'POST', body: formData });
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = "extracted_data.zip";
+            a.click();
+
+            document.getElementById('status').style.display = 'none';
+        };
+    </script>
+</body>
+
+</html>

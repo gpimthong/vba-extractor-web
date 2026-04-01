@@ -1,0 +1,4 @@
+flask
+oletools
+pandas
+openpyxl
